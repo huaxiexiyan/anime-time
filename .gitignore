@@ -31,7 +31,7 @@ hs_err_pid*
 /src/main/generated/
 
 # 区分国内源，忽略部分文件
-#gradle
+gradle
 #./build.gradle
 #settings.gradle
 build/

@@ -1,0 +1,35 @@
+server:
+  port: 26000
+
+spring:
+  #数据源配置
+  datasource:
+    # 自动执行sql
+    url: jdbc:mysql://xxxx/anime_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: kLYSE*XbFAu3RN6l
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #HikariPool 较佳配置
+    hikari:
+      connection-timeout: 60000
+      validation-timeout: 3000
+      idle-timeout: 60000
+      login-timeout: 5
+      max-lifetime: 60000
+      maximum-pool-size: 10
+      minimum-idle: 10
+      read-only: false
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+
+logging:
+  config: classpath:log/logback-test.xml

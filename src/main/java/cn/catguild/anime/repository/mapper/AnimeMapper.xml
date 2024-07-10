@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.catguild.anime.repository.mapper.AnimeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.catguild.anime.domain.Anime">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="subtitle" property="subtitle"/>
+        <result column="cover" property="cover"/>
+        <result column="horizontal_picture" property="horizontalPicture"/>
+        <result column="release_time" property="releaseTime"/>
+        <result column="summary" property="summary"/>
+
+        <result column="created_by" property="createdBy"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="last_modified_by" property="lastModifiedBy"/>
+        <result column="last_modified_time" property="lastModifiedTime"/>
+        <result column="deleted_by" property="deletedBy"/>
+        <result column="deleted_time" property="deletedTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, subtitle,cover, horizontal_picture,release_time,summary,
+            created_by, created_time, last_modified_by, last_modified_time, deleted_by, deleted_time,is_deleted
+    </sql>
+
+</mapper>

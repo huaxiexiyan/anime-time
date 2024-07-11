@@ -12,4 +12,6 @@ public interface AnimeService {
 
 	ApiPage<Anime> page(AnimePageQuery animePageQuery);
 
+	void add(Anime anime);
+
 }

@@ -1,15 +1,19 @@
-package cn.catguild.anime.utils.transplant;
+package cn.catguild.anime.utils;
 
+import cn.catguild.anime.utils.transplant.CustomJavaTimeModule;
+import cn.catguild.anime.utils.transplant.DateUtil;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.*;
@@ -19,17 +23,21 @@ import java.util.*;
  * @date 2022-04-25 15:29
  */
 @Slf4j
+@UtilityClass
 public class JSONUtils {
-
-	private JSONUtils() {
-
-	}
 
 	public static ObjectMapper getInstance() {
 		return JacksonHolder.INSTANCE;
 	}
 
-	public static <T> List<T> parseArray(String jsonStr, Class<T> valueTypeRef) {
+	/**
+	 *
+	 * @param jsonStr
+	 * @param valueTypeRef
+	 * @return
+	 * @param <T>
+	 */
+	public static <T> List<T> toList(String jsonStr, Class<T> valueTypeRef) {
 		try {
 			List<Map<String, Object>> list = getInstance().readValue(jsonStr,
 				TypeFactory.defaultInstance().constructCollectionType(List.class, Map.class));
@@ -41,37 +49,57 @@ public class JSONUtils {
 			return result;
 		} catch (JsonProcessingException e) {
 			log.error("jackson 序列化失败，输入【{}】 目标类型【{}】", jsonStr, valueTypeRef, e);
-			return new ArrayList<>();
+			throw new RuntimeException(e);
 		}
 	}
 
-	public static <T> T parse(String jsonStr, Class<T> valueTypeRef) {
-		try {
-			Map<String, Object> objMap = getInstance().readValue(jsonStr, new TypeReference<>() {
-			});
-			return toPojo(objMap, valueTypeRef);
-		} catch (JsonProcessingException e) {
-			log.error("jackson 序列化失败", e);
-			return null;
-		}
-	}
 
-	public static <T> T toPojo(Map<String, Object> map, Class<T> valueTypeRef) {
-		TypeReference<T> typeReference = new TypeReference<>() {};
-		return getInstance().convertValue(map, typeReference);
-	}
-
+	/**
+	 *
+	 * @param obj
+	 * @param valueTypeRef
+	 * @return
+	 * @param <T>
+	 */
 	public static <T> T toPojo(Object obj, Class<T> valueTypeRef) {
+		// 如果 obj 是 JSON 字符串，使用 readValue 方法
+		if (obj instanceof String) {
+			try {
+				return getInstance().readValue((String) obj, valueTypeRef);
+			} catch (IOException e) {
+				log.error("jackson 序列化失败，输入【{}】 目标类型【{}】", obj, valueTypeRef, e);
+				throw new RuntimeException(e);
+			}
+		}
+		// 否则，使用 convertValue 方法
 		return getInstance().convertValue(obj, valueTypeRef);
 	}
 
-	// 序列化对象为JSON字符串
+	/**
+	 *  序列化对象为JSON字符串
+	 * @param obj
+	 * @return
+	 */
 	public static String toJsonStr(Object obj) {
 		try {
 			return getInstance().writeValueAsString(obj);
 		} catch (JsonProcessingException e) {
 			log.error("jackson 序列化失败", e);
-			return null;
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 将json对象读出来
+	 *
+	 * @param jsonValue
+	 * @return
+	 */
+	public static JsonNode toJsonTree(String jsonValue) {
+		try {
+			return getInstance().readTree(jsonValue);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

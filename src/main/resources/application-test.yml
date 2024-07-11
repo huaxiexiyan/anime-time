@@ -19,6 +19,12 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 10
       read-only: false
+  # Redis连接配置
+  redis:
+    host-name: #
+    port: 6379
+    database: 1
+    password: #
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

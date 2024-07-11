@@ -9,16 +9,16 @@ import lombok.Getter;
 public class BizException extends RuntimeException {
 
 	@Getter
-	private final String code;
+	private final Integer code;
 
 	@Getter
 	private final String msg;
 
 	public BizException(String msg) {
-		this("400", msg);
+		this(400, msg);
 	}
 
-	public BizException(String code, String msg) {
+	public BizException(Integer code, String msg) {
 		super(msg);
 		this.code = code;
 		this.msg = msg;

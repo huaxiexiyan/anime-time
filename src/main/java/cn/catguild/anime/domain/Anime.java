@@ -17,6 +17,11 @@ import java.time.LocalDateTime;
 public class Anime extends AbstractEntity {
 
 	/**
+	 * 唯一id
+	 */
+	private Integer seasonId;
+
+	/**
 	 * 标题，原名
 	 */
 	private String title;
@@ -24,7 +29,12 @@ public class Anime extends AbstractEntity {
 	/**
 	 * 副标题
 	 */
-	private String subtitle;
+	private String subTitle;
+
+	/**
+	 * 链接处
+	 */
+	private String link;
 
 	/**
 	 * 封面图地址

@@ -18,18 +18,18 @@ public class ApiPageQuery<T> {
 	/**
 	 * 每页显示条数，默认 10
 	 */
-	private Long size = 10L;
+	private Long pageSize = 10L;
 	/**
 	 * 当前页
 	 */
-	private Long current = 1L;
+	private Long page = 1L;
 	/**
 	 * 当前分页总页数
 	 */
 	private Long pages;
 
 	public IPage<T> getIpage(){
-		return new Page<T>(current,size,total);
+		return new Page<T>(page,pageSize,total);
 	}
 
 }

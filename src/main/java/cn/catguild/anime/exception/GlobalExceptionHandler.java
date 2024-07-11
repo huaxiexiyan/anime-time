@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 	@ResponseBody
 	public ApiResponse<Void> exceptionHandler(HttpServletRequest req, NullPointerException e) {
 		log.error("发生空指针异常！原因是:", e);
-		return ApiResponse.failMessage("发生空指针异常！原因是:");
+		return ApiResponse.fail("发生空指针异常");
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 	@ResponseBody
 	public ApiResponse<Void> exceptionHandler(HttpServletRequest req, Exception e) {
 		log.error("未知异常！原因是:", e);
-		return ApiResponse.failMessage("未知异常");
+		return ApiResponse.fail("未知异常");
 	}
 
 }

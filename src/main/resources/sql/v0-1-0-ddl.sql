@@ -3,10 +3,12 @@ DROP TABLE IF EXISTS anime;
 create table anime
 (
     id                 bigint not null comment '动漫id',
+    season_id          bigint not null comment '唯一id',
     title              varchar(100) comment '标题，原名',
-    subtitle           varchar(100) comment '副标题',
+    sub_title          varchar(100) comment '副标题',
     cover              varchar(1000) comment '标题，原名',
-    horizontal_picture  varchar(1000) comment '标题，原名',
+    horizontal_picture varchar(1000) comment '标题，原名',
+    link               varchar(1000) comment '链接地址',
     release_time       datetime comment '发行时间',
     summary            text comment '简介',
 

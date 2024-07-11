@@ -16,11 +16,13 @@ public class ApiPageUtils {
 
 	public static <R, T> ApiPage<T> toApiPage(IPage<R> page, Function<IPage<R>, List<T>> conversionFunction) {
 		ApiPage<T> apiPage = new ApiPage<>();
-		apiPage.setCurrent(page.getCurrent());
-		apiPage.setSize(page.getSize());
-		apiPage.setTotal(page.getTotal());
+		apiPage.setNum((int) page.getCurrent());
+		apiPage.setSize((int) page.getSize());
+		apiPage.setTotal((int) page.getTotal());
+		// 计算是否有下一页
+		apiPage.setHasNext(apiPage.getNum() * apiPage.getSize() > apiPage.getTotal() ? 1 : 0);
 		// 接受一个函数，进行 records 转换
-		apiPage.setRecords(conversionFunction.apply(page));
+		apiPage.setList(conversionFunction.apply(page));
 		return apiPage;
 	}
 

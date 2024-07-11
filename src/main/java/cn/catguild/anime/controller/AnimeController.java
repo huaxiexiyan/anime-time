@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2024/7/7 20:44
  */
 @Slf4j
-@RequestMapping("/api/anime")
+@RequestMapping("/anime/index")
 @RestController
 @AllArgsConstructor
 public class AnimeController {

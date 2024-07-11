@@ -11,13 +11,15 @@ import java.util.List;
 @Data
 public class ApiPage<T> {
 
-	private List<T> records;
+	private int hasNext = 1;
 
-	private long current = 1;
+	private List<T> list;
 
-	private long size = 10;
+	private int num = 1;
 
-	private long total = 0;
+	private int size = 10;
+
+	private int total = 0;
 
 	public ApiPage() {
 

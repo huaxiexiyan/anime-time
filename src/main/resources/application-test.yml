@@ -1,13 +1,13 @@
 server:
-  port: 26000
+  port: [port]
 
 spring:
   #数据源配置
   datasource:
     # 自动执行sql
-    url: jdbc:mysql://xxxx/anime_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://[ip]:[prod]/anime_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: kLYSE*XbFAu3RN6l
+    password: [password]
     driver-class-name: com.mysql.cj.jdbc.Driver
     #HikariPool 较佳配置
     hikari:
@@ -21,10 +21,10 @@ spring:
       read-only: false
   # Redis连接配置
   redis:
-    host-name: #
+    host-name: [填redis地址]
     port: 6379
     database: 1
-    password: #
+    password: [密码]
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

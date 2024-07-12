@@ -22,9 +22,3 @@ create table anime
 
     primary key (id)
 ) engine = InnoDB comment ='动漫信息表';;
-
-
-
-
-
-

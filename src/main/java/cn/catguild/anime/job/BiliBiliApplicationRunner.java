@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 初始化执行
+ * public class BiliBiliApplicationRunner implements ApplicationRunner
  *
  * @author xiyan
  * @date 2023/8/11 10:48
@@ -16,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @AllArgsConstructor
 @Component
-public class BiliBiliApplicationRunner implements ApplicationRunner {
+public class BiliBiliApplicationRunner {
 
 	private final BiliBiliTask biliBiliTask;
 
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		// new Thread(biliBiliTask::initSeasonIndexTask).start();
+
+	public void run()  {
+		new Thread(biliBiliTask::initSeasonIndexTask).start();
 	}
 
 

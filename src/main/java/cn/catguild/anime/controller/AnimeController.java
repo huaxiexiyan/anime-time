@@ -4,6 +4,7 @@ import cn.catguild.anime.common.ApiPage;
 import cn.catguild.anime.common.ApiResponse;
 import cn.catguild.anime.domain.Anime;
 import cn.catguild.anime.domain.query.AnimePageQuery;
+import cn.catguild.anime.job.BiliBiliApplicationRunner;
 import cn.catguild.anime.service.AnimeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AnimeController {
 
 	private final AnimeService animeService;
+
+	private final BiliBiliApplicationRunner biliBiliApplicationRunner;
+
+	@GetMapping("/init")
+	public ApiResponse<Void> init(){
+		biliBiliApplicationRunner.run();
+		return ApiResponse.ok();
+	}
 
 	@GetMapping("")
 	public ApiResponse<ApiPage<Anime>> page(@ModelAttribute AnimePageQuery animePageQuery){

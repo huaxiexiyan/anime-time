@@ -34,4 +34,4 @@ jobs:
       - name: Build project
         run: |
           chmod +x ./gradlew
-          ./gradlew :anime-time:jib
+          ./gradlew jib

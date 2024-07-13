@@ -23,7 +23,8 @@ public class BiliBiliApplicationRunner {
 
 
 	public void run()  {
-		new Thread(biliBiliTask::initSeasonIndexTask).start();
+		// new Thread(biliBiliTask::initSeasonIndexResultTask).start();
+		new Thread(biliBiliTask::initSeasonIndexConditionTask).start();
 	}
 
 

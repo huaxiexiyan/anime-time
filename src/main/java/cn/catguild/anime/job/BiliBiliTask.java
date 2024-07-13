@@ -1,10 +1,13 @@
 package cn.catguild.anime.job;
 
 import cn.catguild.anime.domain.Anime;
+import cn.catguild.anime.domain.AnimeCondition;
 import cn.catguild.anime.job.domain.BiliBiliSeasonIndex;
+import cn.catguild.anime.job.domain.BiliBiliSeasonIndexCondition;
 import cn.catguild.anime.service.AnimeService;
 import cn.catguild.anime.utils.JSONUtils;
 import cn.catguild.anime.utils.cache.CacheClient;
+import cn.catguild.anime.utils.id.IdGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +29,13 @@ public class BiliBiliTask {
 
 	private final AnimeService animeService;
 
+	private final IdGenerator idGenerator;
+
 	/**
 	 * 初始化番剧索引
 	 */
-	public void initSeasonIndexTask() {
-		List<String> keys = cacheClient.getKeys("bilibili:*");
+	public void initSeasonIndexResultTask() {
+		List<String> keys = cacheClient.getKeys("bilibili:season:index:result:success:*");
 		keys.forEach(key -> {
 			try {
 				String jsonValue = cacheClient.getValue(key);
@@ -47,6 +52,38 @@ public class BiliBiliTask {
 				log.error("任务执行异常，异常键【{}】", key, e);
 			}
 		});
+	}
+
+	/**
+	 * 初始化番剧筛选
+	 */
+	public void initSeasonIndexConditionTask() {
+		try {
+			String jsonValue = cacheClient.getValue("bilibili:season:index:condition:success");
+			JsonNode jsonTree = JSONUtils.toJsonTree(jsonValue);
+			String jsonList = jsonTree.get("data").get("filter").toString();
+			List<BiliBiliSeasonIndexCondition> pojo = JSONUtils.toList(jsonList, BiliBiliSeasonIndexCondition.class);
+			pojo.forEach(index -> {
+				try {
+					AnimeCondition animeFilter = new AnimeCondition();
+					BeanUtils.copyProperties(index, animeFilter);
+					animeFilter.setId(idGenerator.nextId());
+					List<BiliBiliSeasonIndexCondition> values = index.getValues();
+					values.forEach(value -> {
+						AnimeCondition animeFilterChild = new AnimeCondition();
+						animeFilterChild.setId(idGenerator.nextId());
+						animeFilterChild.setParentId(animeFilter.getId());
+						BeanUtils.copyProperties(value, animeFilterChild);
+						animeService.addCondition(animeFilterChild);
+					});
+					animeService.addCondition(animeFilter);
+				} catch (Exception e) {
+					log.error("任务执行异常,feild=【{}】", index.getField(), e);
+				}
+			});
+		} catch (Exception e) {
+			log.error("任务执行异常", e);
+		}
 	}
 
 }

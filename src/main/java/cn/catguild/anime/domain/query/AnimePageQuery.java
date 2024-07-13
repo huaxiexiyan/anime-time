@@ -5,6 +5,8 @@ import cn.catguild.anime.domain.Anime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * @author xiyan
  * @date 2024/7/7 20:48
@@ -14,5 +16,7 @@ import lombok.EqualsAndHashCode;
 public class AnimePageQuery extends ApiPageQuery<Anime> {
 
 	private String title;
+
+	private String subTitle;
 
 }

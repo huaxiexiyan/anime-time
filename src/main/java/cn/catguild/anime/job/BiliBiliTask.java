@@ -58,32 +58,40 @@ public class BiliBiliTask {
 	 * 初始化番剧筛选
 	 */
 	public void initSeasonIndexConditionTask() {
+		log.info("初始化筛选列表任务执行结束");
 		try {
 			String jsonValue = cacheClient.getValue("bilibili:season:index:condition:success");
 			JsonNode jsonTree = JSONUtils.toJsonTree(jsonValue);
 			String jsonList = jsonTree.get("data").get("filter").toString();
 			List<BiliBiliSeasonIndexCondition> pojo = JSONUtils.toList(jsonList, BiliBiliSeasonIndexCondition.class);
+			final int[] sort = {0};
 			pojo.forEach(index -> {
 				try {
+					sort[0]++;
 					AnimeCondition animeFilter = new AnimeCondition();
 					BeanUtils.copyProperties(index, animeFilter);
 					animeFilter.setId(idGenerator.nextId());
 					List<BiliBiliSeasonIndexCondition> values = index.getValues();
+					final int[] sortChild = {0};
 					values.forEach(value -> {
+						sortChild[0]++;
 						AnimeCondition animeFilterChild = new AnimeCondition();
 						animeFilterChild.setId(idGenerator.nextId());
 						animeFilterChild.setParentId(animeFilter.getId());
 						BeanUtils.copyProperties(value, animeFilterChild);
+						animeFilterChild.setSort(sortChild[0]);
 						animeService.addCondition(animeFilterChild);
 					});
+					animeFilter.setSort(sort[0]);
 					animeService.addCondition(animeFilter);
 				} catch (Exception e) {
-					log.error("任务执行异常,feild=【{}】", index.getField(), e);
+					log.error("任务执行异常,filed=【{}】", index.getField(), e);
 				}
 			});
 		} catch (Exception e) {
 			log.error("任务执行异常", e);
 		}
+		log.info("初始化筛选列表任务执行结束");
 	}
 
 }

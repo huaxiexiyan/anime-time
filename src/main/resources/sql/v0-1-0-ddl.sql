@@ -31,7 +31,7 @@ create table anime_condition
     parent_id          bigint not null default 0 comment '上级组名',
     name               varchar(100) comment '筛选名称',
     field              varchar(100) comment '查询字段名',
-    keyword            varchar(100) comment '查询值',
+    keyword            varchar(1000) comment '查询值',
     sort               int4   not null default 0 comment '排序字段，值越大排序越靠后',
 
     created_by         bigint comment '创建人',

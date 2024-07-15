@@ -2,6 +2,7 @@ package cn.catguild.anime.controller;
 
 import cn.catguild.anime.common.ApiPage;
 import cn.catguild.anime.common.ApiResponse;
+import cn.catguild.anime.paramsresolver.ParameterConvertUnderlineToHump;
 import cn.catguild.anime.domain.Anime;
 import cn.catguild.anime.domain.AnimeCondition;
 import cn.catguild.anime.domain.query.AnimePageQuery;
@@ -10,7 +11,6 @@ import cn.catguild.anime.service.AnimeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +37,7 @@ public class AnimeController {
 	}
 
 	@GetMapping("")
-	public ApiResponse<ApiPage<Anime>> page(@ModelAttribute AnimePageQuery animePageQuery) {
+	public ApiResponse<ApiPage<Anime>> page(@ParameterConvertUnderlineToHump AnimePageQuery animePageQuery) {
 		return ApiResponse.ok(animeService.page(animePageQuery));
 	}
 

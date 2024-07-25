@@ -69,6 +69,16 @@ public class AnimeServiceImpl implements AnimeService {
 	}
 
 	@Override
+	public void updateByHashId(String hashId, Anime anime) {
+		baseMapper.updateByHashId(hashId, anime);
+	}
+
+	@Override
+	public boolean isExistByHashId(String hashId) {
+		return baseMapper.exists(Wrappers.<Anime>lambdaQuery().eq(Anime::getHashId, hashId));
+	}
+
+	@Override
 	public void addCondition(AnimeCondition animeFilter) {
 		animeFilterMapper.insert(animeFilter);
 	}

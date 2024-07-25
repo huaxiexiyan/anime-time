@@ -54,4 +54,24 @@
                 null, 0);
     </insert>
 
+    <update id="updateByHashId">
+        UPDATE "anime"
+        SET season_id=#{et.seasonId},
+            title=#{et.title},
+            subtitle=#{et.subtitle},
+            cover=#{et.cover},
+            horizontal_picture=#{et.horizontalPicture},
+            link=#{et.link},
+            type=#{et.type.code},
+            status=#{et.status},
+            evaluate=#{et.evaluate},
+            pub_time=#{et.publish.pubTime},
+            is_started=#{et.publish.isStarted},
+            is_finish=#{et.publish.isFinish},
+            weekday=#{et.publish.weekday},
+            last_modified_by=#{et.lastModifiedBy},
+            last_modified_time=#{et.lastModifiedTime}
+        WHERE hash_id = #{hashId}
+    </update>
+
 </mapper>

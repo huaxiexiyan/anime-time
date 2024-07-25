@@ -1,6 +1,5 @@
 package cn.catguild.anime.job;
 
-import cn.catguild.anime.constant.BroadcastPlatform;
 import cn.catguild.anime.domain.Anime;
 import cn.catguild.anime.domain.AnimeCondition;
 import cn.catguild.anime.domain.type.AnimeType;
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -52,25 +49,29 @@ public class BiliBiliTask {
 			List<String> keys = cacheClient.getKeys("bilibili:season:details:*");
 			int total = keys.size();
 			final int[] current = {0};
-			// keys.forEach(key -> {
-			// 	try {
-			log.info("<<<<<<============ 初始化任务【哔哩哔哩番剧详情】执行进度【{}%】 ============>>>>>>",
-				new BigDecimal(current[0]).divide(new BigDecimal(total), 2, RoundingMode.HALF_UP));
-			String jsonValue = cacheClient.getValue(keys.get(0));
-			JsonNode jsonTree = JSONUtils.toJsonTree(jsonValue);
-			JsonNode resultNode = jsonTree.get("result");
-			BiliBiliSeason season = JSONUtils.toPojo(resultNode.toString(), BiliBiliSeason.class);
-			Anime anime = convertAnime(season);
-			// 依据标题计算出唯一
-			anime.setHashId(Hashing.murmur3_128().hashBytes(anime.getTitle().getBytes()).toString());
-			log.info("解析完毕：{}", anime);
-			animeService.add(anime);
-			// 	} catch (Exception e) {
-			// 		log.error("任务执行异常,redis_key=【{}】", key, e);
-			// 	} finally {
-			// 		current[0]++;
-			// 	}
-			// });
+			keys.forEach(key -> {
+				try {
+					log.info("<<<<<<============ 初始化任务【哔哩哔哩番剧详情】执行进度【{}%】 ============>>>>>>",
+						new BigDecimal(current[0]).divide(new BigDecimal(total), 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100")));
+					String jsonValue = cacheClient.getValue(keys.get(0));
+					JsonNode jsonTree = JSONUtils.toJsonTree(jsonValue);
+					JsonNode resultNode = jsonTree.get("result");
+					BiliBiliSeason season = JSONUtils.toPojo(resultNode.toString(), BiliBiliSeason.class);
+					Anime anime = convertAnime(season);
+					String hashId = Hashing.murmur3_128().hashBytes(anime.getTitle().getBytes()).toString();
+					anime.setHashId(hashId);
+					// 依据标题计算出唯一
+					if (animeService.isExistByHashId(hashId)) {
+						animeService.add(anime);
+					} else {
+						animeService.updateByHashId(hashId, anime);
+					}
+				} catch (Exception e) {
+					log.error("任务执行异常,redis_key=【{}】", key, e);
+				} finally {
+					current[0]++;
+				}
+			});
 		} catch (Exception e) {
 			log.error("任务执行异常", e);
 		}

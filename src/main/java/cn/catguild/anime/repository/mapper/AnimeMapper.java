@@ -17,4 +17,6 @@ public interface AnimeMapper extends BaseMapper<Anime> {
 	@Override
 	int insert(@Param("et") Anime anime);
 
+	void updateByHashId(@Param("hashId") String hashId, @Param("et") Anime anime);
+
 }

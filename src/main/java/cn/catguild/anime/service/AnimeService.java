@@ -24,4 +24,8 @@ public interface AnimeService {
 
 	void addCondition(AnimeCondition animeFilter);
 
+	void updateByHashId(String hashId, Anime anime);
+
+	boolean isExistByHashId(String hashId);
+
 }

@@ -21,7 +21,7 @@ import java.util.List;
  * @date 2024/7/7 20:44
  */
 @Slf4j
-@RequestMapping("/anime/index")
+@RequestMapping("/season")
 @RestController
 @AllArgsConstructor
 public class AnimeController {

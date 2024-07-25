@@ -1,19 +1,29 @@
 package cn.catguild.anime.job;
 
+import cn.catguild.anime.constant.BroadcastPlatform;
 import cn.catguild.anime.domain.Anime;
 import cn.catguild.anime.domain.AnimeCondition;
-import cn.catguild.anime.job.domain.BiliBiliSeasonIndex;
+import cn.catguild.anime.domain.type.AnimeType;
+import cn.catguild.anime.domain.type.PublishInfo;
+import cn.catguild.anime.job.domain.BiliBiliSeason;
 import cn.catguild.anime.job.domain.BiliBiliSeasonIndexCondition;
 import cn.catguild.anime.service.AnimeService;
 import cn.catguild.anime.utils.JSONUtils;
 import cn.catguild.anime.utils.cache.CacheClient;
 import cn.catguild.anime.utils.id.IdGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.hash.Hashing;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -31,27 +41,59 @@ public class BiliBiliTask {
 
 	private final IdGenerator idGenerator;
 
+
 	/**
-	 * 初始化番剧索引
+	 * 初始化番剧详情
 	 */
-	public void initSeasonIndexResultTask() {
-		List<String> keys = cacheClient.getKeys("bilibili:season:index:result:success:*");
-		keys.forEach(key -> {
-			try {
-				String jsonValue = cacheClient.getValue(key);
-				JsonNode jsonTree = JSONUtils.toJsonTree(jsonValue);
-				String jsonList = jsonTree.get("data").get("list").toString();
-				List<BiliBiliSeasonIndex> pojo = JSONUtils.toList(jsonList, BiliBiliSeasonIndex.class);
-				pojo.forEach(index -> {
-					Anime anime = new Anime();
-					BeanUtils.copyProperties(index, anime);
-					anime.setSeasonId(index.getSeason_id());
-					animeService.add(anime);
-				});
-			} catch (Exception e) {
-				log.error("任务执行异常，异常键【{}】", key, e);
-			}
-		});
+	public void initSeasonIndexDetailsTask() {
+		log.info("<<<<<<============ 初始化任务【哔哩哔哩番剧详情】执行【开始】 ============>>>>>>");
+		// 1、从redis获取数据
+		try {
+			List<String> keys = cacheClient.getKeys("bilibili:season:details:*");
+			int total = keys.size();
+			final int[] current = {0};
+			// keys.forEach(key -> {
+			// 	try {
+			log.info("<<<<<<============ 初始化任务【哔哩哔哩番剧详情】执行进度【{}%】 ============>>>>>>",
+				new BigDecimal(current[0]).divide(new BigDecimal(total), 2, RoundingMode.HALF_UP));
+			String jsonValue = cacheClient.getValue(keys.get(0));
+			JsonNode jsonTree = JSONUtils.toJsonTree(jsonValue);
+			JsonNode resultNode = jsonTree.get("result");
+			BiliBiliSeason season = JSONUtils.toPojo(resultNode.toString(), BiliBiliSeason.class);
+			Anime anime = convertAnime(season);
+			// 依据标题计算出唯一
+			anime.setHashId(Hashing.murmur3_128().hashBytes(anime.getTitle().getBytes()).toString());
+			log.info("解析完毕：{}", anime);
+			animeService.add(anime);
+			// 	} catch (Exception e) {
+			// 		log.error("任务执行异常,redis_key=【{}】", key, e);
+			// 	} finally {
+			// 		current[0]++;
+			// 	}
+			// });
+		} catch (Exception e) {
+			log.error("任务执行异常", e);
+		}
+		log.info("<<<<<<============ 初始化任务【哔哩哔哩番剧详情】执行【结束】 ============>>>>>>");
+	}
+
+	private Anime convertAnime(BiliBiliSeason season) {
+		Anime anime = new Anime();
+		BeanUtils.copyProperties(season, anime);
+		anime.setSeasonId(season.getSeason_id());
+		anime.setHorizontalPicture(season.getHorizontal_picture());
+		anime.setType(AnimeType.parse(season.getType()));
+		BiliBiliSeason.BiliBiliSeasonPublishInfo publish = season.getPublish();
+		PublishInfo publishInfo = new PublishInfo();
+		publishInfo.setIsStarted(publish.getIs_started());
+		publishInfo.setIsFinish(publish.getIs_finish());
+
+		publishInfo.setPubTime(LocalDateTime.parse(publish.getPub_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+		publishInfo.setPubTimeShow(publish.getPub_time_show());
+		publishInfo.setUnknowPubDate(publish.getUnknow_pub_date());
+		publishInfo.setWeekday(publish.getWeekday());
+		anime.setPublish(publishInfo);
+		return anime;
 	}
 
 	/**

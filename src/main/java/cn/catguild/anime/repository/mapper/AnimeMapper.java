@@ -2,6 +2,7 @@ package cn.catguild.anime.repository.mapper;
 
 import cn.catguild.anime.domain.Anime;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -12,5 +13,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2023-10-22
  */
 public interface AnimeMapper extends BaseMapper<Anime> {
+
+	@Override
+	int insert(@Param("et") Anime anime);
 
 }

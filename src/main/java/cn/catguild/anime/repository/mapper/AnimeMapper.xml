@@ -5,12 +5,26 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.catguild.anime.domain.Anime">
         <id column="id" property="id"/>
+        <result column="hash_id" property="hashId"/>
+        <result column="season_id" property="seasonId"/>
         <result column="title" property="title"/>
         <result column="subtitle" property="subtitle"/>
+        <result column="link" property="link"/>
         <result column="cover" property="cover"/>
         <result column="horizontal_picture" property="horizontalPicture"/>
-        <result column="release_time" property="releaseTime"/>
-        <result column="summary" property="summary"/>
+
+        <result column="status" property="status"/>
+        <result column="type" property="type"/>
+        <result column="evaluate" property="evaluate"/>
+
+        <!--        <association property="publish">-->
+        <!--            <result column="is_started" property="isStarted"/>-->
+        <!--            <result column="is_finish" property="isFinish"/>-->
+        <!--            <result column="pub_time" property="pubTime"/>-->
+        <!--            <result column="pub_time_show" property="pubTimeShow"/>-->
+        <!--            <result column="unknow_pub_date" property="unknowPubDate"/>-->
+        <!--            <result column="weekday" property="weekday"/>-->
+        <!--        </association>-->
 
         <result column="created_by" property="createdBy"/>
         <result column="created_time" property="createdTime"/>
@@ -26,5 +40,18 @@
         id, title, subtitle,cover, horizontal_picture,release_time,summary,
             created_by, created_time, last_modified_by, last_modified_time, deleted_by, deleted_time,is_deleted
     </sql>
+
+    <insert id="insert">
+        INSERT INTO "anime" ("id", "hash_id", "season_id", "title", "subtitle", "cover",
+                             "horizontal_picture", "link", "type", "status", "evaluate",
+                             "pub_time", "is_started", "is_finish", "weekday",
+                             "created_by", "created_time", "last_modified_by", "last_modified_time", "deleted_by",
+                             "deleted_time", "is_deleted")
+        VALUES (#{et.id}, #{et.hashId}, #{et.seasonId}, #{et.title}, #{et.subtitle}, #{et.cover},
+                #{et.horizontalPicture}, #{et.link}, #{et.type.code}, #{et.status}, #{et.evaluate},
+                #{et.publish.pubTime}, #{et.publish.isStarted}, #{et.publish.isFinish}, #{et.publish.weekday},
+                #{et.createdBy}, #{et.createdTime}, null, null, null,
+                null, 0);
+    </insert>
 
 </mapper>

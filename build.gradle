@@ -58,15 +58,15 @@ dependencies {
 
     // 持久层依赖
 //    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    implementation 'org.postgresql:postgresql:42.6.0'
-    implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'org.postgresql:postgresql:42.6.0'
+//    implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.3.2'
 
     // 缓存
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // 工具包
-//    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'com.google.guava:guava:33.2.1-jre'
 
     // 测试框架
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -135,7 +135,7 @@ jib {
         image = 'huaxiexiyan/anime-time:main'
     }
     container {
-        jvmFlags = ['-Xmx128m', '-Xms128m'] // 添加堆内存参数
+        jvmFlags = ['-Xmx68m', '-Xms68m'] // 添加堆内存参数
         creationTime = 'USE_CURRENT_TIMESTAMP'
         environment = [
             'TZ': 'Asia/Shanghai'

@@ -40,6 +40,8 @@ public class AnimeCondition extends AbstractEntity {
 	 */
 	private Integer sort;
 
+	private Integer isShow;
+
 	@TableField(exist = false)
 	private List<AnimeCondition> values;
 

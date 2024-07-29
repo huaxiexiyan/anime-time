@@ -37,15 +37,10 @@ public class UnderlineToHumpParamsResolver implements HandlerMethodArgumentResol
 		while (paramNames.hasNext()) {
 			String paramName = paramNames.next();
 			Object o = webRequest.getParameter(paramName);
-			try {
-				if (StringUtils.hasText(paramName) && paramName.contains("_")) {
-					wrapper.setPropertyValue(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, paramName), o);
-				} else {
-					wrapper.setPropertyValue(paramName, o);
-
-				}
-			} catch (BeansException beansException) {
-
+			if (StringUtils.hasText(paramName) && paramName.contains("_")) {
+				wrapper.setPropertyValue(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, paramName), o);
+			} else {
+				wrapper.setPropertyValue(paramName, o);
 			}
 		}
 		return obj;

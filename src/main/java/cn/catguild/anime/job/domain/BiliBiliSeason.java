@@ -1,14 +1,8 @@
 package cn.catguild.anime.job.domain;
 
-import cn.catguild.anime.domain.Area;
-import cn.catguild.anime.domain.type.AnimeType;
-import cn.catguild.anime.domain.type.PublishInfo;
-import com.baomidou.mybatisplus.annotation.TableField;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

@@ -42,20 +42,20 @@
     </sql>
 
     <insert id="insert">
-        INSERT INTO "anime" ("id", "hash_id", "season_id", "title", "subtitle", "cover",
-                             "horizontal_picture", "link", "type", "status", "evaluate",
-                             "pub_time", "is_started", "is_finish", "weekday",
-                             "created_by", "created_time", "last_modified_by", "last_modified_time", "deleted_by",
-                             "deleted_time", "is_deleted")
+        INSERT INTO anime ("id", "hash_id", "season_id", "title", "subtitle", "cover",
+                           "horizontal_picture", "link", "type", "area", "status", "evaluate",
+                           "pub_time", "is_started", "is_finish", "weekday",
+                           "created_by", "created_time", "last_modified_by", "last_modified_time", "deleted_by",
+                           "deleted_time", "is_deleted")
         VALUES (#{et.id}, #{et.hashId}, #{et.seasonId}, #{et.title}, #{et.subtitle}, #{et.cover},
-                #{et.horizontalPicture}, #{et.link}, #{et.type.code}, #{et.status}, #{et.evaluate},
+                #{et.horizontalPicture}, #{et.link}, #{et.type.code}, #{et.area.code}, #{et.status}, #{et.evaluate},
                 #{et.publish.pubTime}, #{et.publish.isStarted}, #{et.publish.isFinish}, #{et.publish.weekday},
                 #{et.createdBy}, #{et.createdTime}, null, null, null,
-                null, 0);
+                null, 0)
     </insert>
 
     <update id="updateByHashId">
-        UPDATE "anime"
+        UPDATE anime
         SET season_id=#{et.seasonId},
             title=#{et.title},
             subtitle=#{et.subtitle},
@@ -63,6 +63,7 @@
             horizontal_picture=#{et.horizontalPicture},
             link=#{et.link},
             type=#{et.type.code},
+            area=#{et.area.code},
             status=#{et.status},
             evaluate=#{et.evaluate},
             pub_time=#{et.publish.pubTime},
@@ -73,5 +74,43 @@
             last_modified_time=#{et.lastModifiedTime}
         WHERE hash_id = #{hashId}
     </update>
+
+    <select id="selectCustomPage" resultType="cn.catguild.anime.domain.Anime">
+        SELECT a.id,a.title,a.subtitle,a.cover
+        FROM anime a
+        <if test="q.styleId != null and q.styleId != '' and q.styleId != '-1'">
+            JOIN anime_style ast ON a.hash_id = ast.anime_hash_id and ast.is_deleted = 0
+        </if>
+        <where>
+            a.is_deleted = 0
+            <if test="q.isFinish != null and q.isFinish != -1">
+                AND a.is_finish = #{q.isFinish}
+            </if>
+            <if test="q.areas != null and q.areas.size > 0">
+                AND a.area IN
+                <foreach collection="q.areas" item="area" open="(" separator="," close=")">
+                    #{area}
+                </foreach>
+            </if>
+            <if test="q.seasonMonth != null and q.seasonMonth != -1">
+                AND EXTRACT(QUARTER FROM pub_time) = #{q.seasonMonth}
+            </if>
+            <if test="q.year != null and q.year != ''">
+                AND (
+                <trim prefixOverrides="AND">
+                    <if test="q.startYear != null">
+                        EXTRACT(YEAR FROM pub_time) &gt;= #{q.startYear}
+                    </if>
+                    <if test="q.endYear != null">
+                        AND EXTRACT(YEAR FROM pub_time) &lt; #{q.endYear}
+                    </if>
+                </trim>
+                )
+            </if>
+            <if test="q.styleId != null and q.styleId != '' and q.styleId != '-1'">
+                AND ast.keyword = #{q.styleId}
+            </if>
+        </where>
+    </select>
 
 </mapper>

@@ -21,10 +21,11 @@ public class AnimePageQuery extends ApiPageQuery<Anime> {
 	 **/
 	private String area;
 
+	private List<Integer> areas;
+
 	/**
 	 * 风格
 	 **/
-
 	private String styleId;
 
 	/**
@@ -50,16 +51,20 @@ public class AnimePageQuery extends ApiPageQuery<Anime> {
 	/**
 	 * 状态
 	 **/
-	private String isFinish;
+	private Integer isFinish;
 
 	/**
 	 * 年份
 	 **/
 	private String year;
 
+	private Integer startYear;
+
+	private Integer endYear;
+
 	/**
 	 * 季度
 	 **/
-	private String seasonMonth;
+	private Integer seasonMonth;
 
 }

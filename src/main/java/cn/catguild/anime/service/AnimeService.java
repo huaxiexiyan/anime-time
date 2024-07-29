@@ -28,4 +28,6 @@ public interface AnimeService {
 
 	boolean isExistByHashId(String hashId);
 
+	String getStyleKeywordByName(String style);
+
 }

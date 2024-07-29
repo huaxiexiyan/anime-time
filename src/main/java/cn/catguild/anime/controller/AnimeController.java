@@ -28,14 +28,6 @@ public class AnimeController {
 
 	private final AnimeService animeService;
 
-	private final BiliBiliApplicationRunner biliBiliApplicationRunner;
-
-	@GetMapping("/init")
-	public ApiResponse<Void> init() {
-		biliBiliApplicationRunner.run();
-		return ApiResponse.ok();
-	}
-
 	@GetMapping("")
 	public ApiResponse<ApiPage<Anime>> page(@ParameterConvertUnderlineToHump AnimePageQuery animePageQuery) {
 		return ApiResponse.ok(animeService.page(animePageQuery));

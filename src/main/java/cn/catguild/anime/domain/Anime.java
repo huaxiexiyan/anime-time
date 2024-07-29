@@ -1,7 +1,9 @@
 package cn.catguild.anime.domain;
 
 import cn.catguild.anime.common.AbstractEntity;
-import cn.catguild.anime.domain.type.AnimeType;
+import cn.catguild.anime.domain.type.AnimeStyle;
+import cn.catguild.anime.domain.type.AnimeTypeEnum;
+import cn.catguild.anime.domain.type.AreaEnum;
 import cn.catguild.anime.domain.type.PublishInfo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
@@ -54,16 +56,19 @@ public class Anime extends AbstractEntity {
 	 */
 	private String horizontalPicture;
 
-	/**
-	 * 地区id
-	 */
-	@TableField(exist = false)
-	private List<Area> areas;
+	private AreaEnum area;
+
+	// /**
+	//  * 地区id
+	//  */
+	// @TableField(exist = false)
+	// private List<AreaEnum> areas;
+
 	/**
 	 * 风格标签
 	 */
 	@TableField(exist = false)
-	private List<String> styles;
+	private List<AnimeStyle> styles;
 	/**
 	 * 状态
 	 */
@@ -71,7 +76,7 @@ public class Anime extends AbstractEntity {
 	/**
 	 * 剧集类型
 	 */
-	private AnimeType type;
+	private AnimeTypeEnum type;
 
 	// 评价内容，或简介
 	private String evaluate;

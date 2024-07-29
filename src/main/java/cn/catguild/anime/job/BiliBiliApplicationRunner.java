@@ -20,10 +20,9 @@ public class BiliBiliApplicationRunner {
 	private final BiliBiliTask biliBiliTask;
 
 
-	@Async
 	public void run()  {
 		// new Thread(biliBiliTask::initSeasonIndexResultTask).start();
-		new Thread(biliBiliTask::initSeasonIndexDetailsTask).start();
+		// new Thread(biliBiliTask::initSeasonIndexDetailsTask).start();
 	}
 
 

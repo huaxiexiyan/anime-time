@@ -48,9 +48,11 @@ public class AnimeServiceImpl implements AnimeService {
 
 	@Override
 	public ApiPage<Anime> page(AnimePageQuery animePageQuery) {
-		animePageQuery.setAreas(CommonUtil.strToIntListAcceptEmpty(animePageQuery.getArea()));
+		if (StringUtils.hasText(animePageQuery.getArea()) && !"-1".equals(animePageQuery.getArea())) {
+			animePageQuery.setAreas(CommonUtil.strToIntListAcceptEmpty(animePageQuery.getArea()));
+		}
 		// 解析年份
-		if (StringUtils.hasText(animePageQuery.getYear())) {
+		if (StringUtils.hasText(animePageQuery.getYear()) && !"-1".equals(animePageQuery.getYear())) {
 			Kv<Integer, Integer> kv = CommonUtil.parseIntRange(animePageQuery.getYear());
 			animePageQuery.setStartYear(kv.getK());
 			animePageQuery.setEndYear(kv.getV());

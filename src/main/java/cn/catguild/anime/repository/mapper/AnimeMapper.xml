@@ -95,7 +95,7 @@
             <if test="q.seasonMonth != null and q.seasonMonth != -1">
                 AND EXTRACT(QUARTER FROM pub_time) = #{q.seasonMonth}
             </if>
-            <if test="q.year != null and q.year != ''">
+            <if test="q.year != null and q.year != '' and q.year != '-1'">
                 AND (
                 <trim prefixOverrides="AND">
                     <if test="q.startYear != null">
